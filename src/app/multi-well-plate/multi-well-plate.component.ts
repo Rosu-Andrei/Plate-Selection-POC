@@ -34,7 +34,8 @@ export class MultiWellPlateComponent implements OnInit {
 
   ngOnInit(): void {
     /**
-     * we subscribe to the Subject so that we receive the data that it emits.
+     * we subscribe to the Subject so that we receive the array that contains only the wells
+     * that have been selected currently.
      */
     this.selectionService.selectionChangeSubject.subscribe(
       (selectedWells: Well[]) => {
@@ -61,30 +62,16 @@ export class MultiWellPlateComponent implements OnInit {
   load(): void {
     this.selectionService.clearSelection();
     mockWells.forEach((well) => {
-      const columnChar = well.id.charAt(0);
-      const rowStr = well.id.slice(1);
+      const selectedWell = this.plateService.getFlatWells().find(w => w.id === well.id);
 
-      if (!columnChar || !rowStr) {
-        console.error(`Invalid well ID: ${well.id}`);
-        return;
-      }
-
-      const columnIndex = columnChar.charCodeAt(0) - 65;
-      const rowIndex = parseInt(rowStr, 10) - 1;
-
-      if (
-        rowIndex < 0 ||
-        rowIndex >= this.plateService.rows ||
-        columnIndex < 0 ||
-        columnIndex >= this.plateService.columns
-      ) {
+      if (selectedWell === undefined) {
         console.error(
           `Well ID ${well.id} is out of bounds for the current plate size (${this.plateService.rows} rows x ${this.plateService.columns} columns).`
         );
         return;
       }
-      const selectedWell = this.plateService.getWells()[rowIndex][columnIndex];
-      // Simulate a selection event
+      selectedWell.sampleId = well.sampleId;
+      selectedWell.sampleRole = well.sampleRole;
       const event = {
         ctrlKey: true,
         metaKey: true,

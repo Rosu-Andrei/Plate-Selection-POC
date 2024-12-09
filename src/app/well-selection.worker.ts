@@ -63,10 +63,10 @@ addEventListener('message', ({data}) => {
       toggleColumnSelection(message.payload);
       postSelectionUpdate();
       break;
+    /**
+     * clears the Set that contains the ids of the wells we want to select.
+     */
     case 'clearSelection':
-      /**
-       * clears the Set that contains the ids of the wells we want to select.
-       */
       clearSelection();
       postSelectionUpdate();
       break;
@@ -98,12 +98,8 @@ function toggleWellSelection(payload: any): void {
 }
 
 function getWellsInRange(startWell: Well, endWell: Well): Well[] {
-  if (
-    startWell.row === undefined ||
-    startWell.column === undefined ||
-    endWell.row === undefined ||
-    endWell.column === undefined
-  ) {
+  if (startWell.row === undefined || startWell.column === undefined ||
+    endWell.row === undefined || endWell.column === undefined) {
     return [];
   }
 
@@ -136,7 +132,7 @@ function toggleRowSelection(payload: any): void {
   if (!rowWells) return;
 
   if (ctrlPressed) {
-    const allSelected = rowWells.every((well) => selectedWellIds.has(well.id));
+    const allSelected = rowWells.every(well => selectedWellIds.has(well.id));
     if (allSelected) {
       rowWells.forEach((well) => selectedWellIds.delete(well.id));
     } else {

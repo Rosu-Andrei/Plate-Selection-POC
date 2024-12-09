@@ -103,6 +103,10 @@ export class WellSelectionService {
     this.worker.postMessage({type: 'clearSelection'});
   }
 
+  /**
+   *
+   * @param selectedWellIds = calculated by the web worker.
+   */
   private updateSelectionModel(selectedWellIds: string[]): void {
     /**
      * we create a well array that will contain only the wells that have been marked by the web
