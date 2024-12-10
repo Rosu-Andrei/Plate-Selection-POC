@@ -113,6 +113,7 @@ export class MultiWellPlateComponent implements OnInit {
     if (this.zoomLevel < 3) {
       this.zoomLevel += 0.1;
       this.zoomLevel = Math.round(this.zoomLevel * 10) / 10;
+      this.updateScrollContainer();
     }
   }
 
@@ -120,6 +121,18 @@ export class MultiWellPlateComponent implements OnInit {
     if (this.zoomLevel > 0.5) {
       this.zoomLevel = Math.max(0.5, this.zoomLevel - 0.1);
       this.zoomLevel = Math.round(this.zoomLevel * 10) / 10;
+      this.updateScrollContainer();
+    }
+  }
+
+  private updateScrollContainer(): void {
+    const scrollContainer = document.querySelector('.scroll-container') as HTMLElement;
+    if (scrollContainer) {
+      if (this.zoomLevel !== 1) {
+        scrollContainer.classList.add('zoomed');
+      } else {
+        scrollContainer.classList.remove('zoomed');
+      }
     }
   }
 

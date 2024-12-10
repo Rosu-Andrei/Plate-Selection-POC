@@ -67,24 +67,30 @@
 }
 
 .scroll-container {
-  overflow: auto; /* Ensures that elements outside the container aren't visible */
-  max-height: 80vh;
+  overflow: hidden;  /* Initially hide scrollbars */
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fdfdfd;
   box-shadow: 0px 4px 8px rgba(0, 0, 0, 0.1);
   padding: 0;
   box-sizing: border-box;
-  position: relative; /* Important for child elements like sticky headers */
+  position: relative;
 }
 
 .plate-grid {
   display: grid;
   position: relative;
-  gap: 5px; /* Add spacing between grid items (headers and wells) */
+  gap: 5px;
   transform-origin: top left;
-  /* Wells or content outside this grid container won't render due to parent's overflow */
+  width: max-content;
+  height: max-content;
 }
+
+/* When this class is added, overflow is enabled */
+.scroll-container.zoomed {
+  overflow: auto;
+}
+
 
 .corner-cell {
   background-color: #f0f0f0;
