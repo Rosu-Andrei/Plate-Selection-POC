@@ -49,6 +49,22 @@ export class MultiWellPlateComponent implements OnInit {
     return this.baseCellSize * this.zoomLevel;
   }
 
+  get gridTemplateColumns(): string {
+    if (this.plateService.columnHeaders && this.plateService.columnHeaders.length > 0) {
+      return '30px ' + this.plateService.columnHeaders.map(() => '30px').join(' ');
+    } else {
+      return '30px';
+    }
+  }
+
+  get gridTemplateRows(): string {
+    if (this.plateService.rowHeaders && this.plateService.rowHeaders.length > 0) {
+      return '30px ' + this.plateService.rowHeaders.map(() => '30px').join(' ');
+    } else {
+      return '30px';
+    }
+  }
+
   selectPlate(plateSize: number | undefined): void {
     if (plateSize !== 96 && plateSize !== 384) {
       console.error('Unsupported plate size:', plateSize);
