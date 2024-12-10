@@ -67,7 +67,7 @@
 }
 
 .scroll-container {
-  overflow: hidden;  /* Initially hide scrollbars */
+  overflow: hidden;
   border: 1px solid #ccc;
   border-radius: 8px;
   background-color: #fdfdfd;
@@ -86,7 +86,6 @@
   height: max-content;
 }
 
-/* When this class is added, overflow is enabled */
 .scroll-container.zoomed {
   overflow: auto;
 }
@@ -112,7 +111,6 @@
   font-weight: bold;
   position: sticky;
   top: 0;
-  /* Increase z-index to ensure it stays on top of wells */
   z-index: 100;
   width: 30px;
   height: 30px;
@@ -128,7 +126,6 @@
   font-weight: bold;
   position: sticky;
   left: 0;
-  /* Increase z-index to ensure it stays on top of wells */
   z-index: 100;
   width: 30px;
   height: 30px;
@@ -150,7 +147,6 @@
   align-items: center;
   justify-content: center;
   position: relative;
-  /* Wells are naturally below headers due to lower z-index */
   z-index: 1;
 }
 
