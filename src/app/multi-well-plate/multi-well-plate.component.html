@@ -35,13 +35,11 @@
 <div class="main-container">
   <!-- Plate Wrapper -->
   <div class="plate-wrapper">
-    <div
-      class="scroll-container"
-      [style.transform]="'scale(' + zoomLevel + ')'"
-      [style.transformOrigin]="'top left'"
-    >
+    <div class="scroll-container">
       <div
         class="plate-grid"
+        [style.transform]="'scale(' + zoomLevel + ')'"
+        [style.transformOrigin]="'top left'"
         [style.gridTemplateColumns]="gridTemplateColumns"
         [style.gridTemplateRows]="gridTemplateRows"
       >
@@ -89,7 +87,7 @@
         </ng-container>
       </div>
     </div>
-    <div class="load-btn" (click)="load()">
+    <div class="load-btn">
       <button mat-button (click)="load()">Load</button>
     </div>
   </div>
