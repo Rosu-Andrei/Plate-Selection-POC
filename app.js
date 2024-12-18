@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain, webContents, WebContentsView, View } = require('electron');
+const {app, BrowserWindow, ipcMain, webContents, WebContentsView, View} = require('electron');
 
 let mainWindow;
 let tabs = [];
@@ -35,7 +35,9 @@ function createMainWindow() {
   });
 }
 
-function createTab(url) {
+const path = require('path'); // Ensure path module is included at the top
+
+function createTab() {
   const tabId = Date.now().toString();
 
   // Create new webContents for this tab
@@ -44,19 +46,22 @@ function createTab(url) {
     nodeIntegration: false
   });
 
-  wc.loadURL(url).catch(err => {
-    console.error(`Failed to load URL (${url}):`, err);
+  // Load the local file: dist/plate-app/browser/index.html
+  const filePath = path.join(__dirname, 'dist', 'plate-app', 'browser', 'index.html');
+  wc.loadFile(filePath).catch(err => {
+    console.error(`Failed to load file (${filePath}):`, err);
   });
 
   wc.on('did-finish-load', () => {
-    console.log(`Tab loaded with URL: ${url}`);
+    console.log(`Tab loaded with file: ${filePath}`);
     console.log(`Renderer Process ID: ${wc.getOSProcessId()}`);
   });
 
   // Wrap the webContents in a WebContentsView
-  const view = new WebContentsView({ webContents: wc });
+  const view = new WebContentsView({webContents: wc});
 
-  tabs.push({ id: tabId, view, url });
+  // Add the tab to the tabs array
+  tabs.push({id: tabId, view, url: filePath});
 
   return tabId;
 }
@@ -111,13 +116,13 @@ function resizeActiveTabView() {
 
   const [width, height] = mainWindow.getContentSize();
   // The tab bar is ~40px high, so place the view below it
-  activeTab.view.setBounds({ x: 0, y: 40, width, height: height - 40 });
+  activeTab.view.setBounds({x: 0, y: 40, width, height: height - 40});
 }
 
 function sendTabsToRenderer() {
   if (mainWindow && !mainWindow.isDestroyed()) {
     mainWindow.webContents.send('tabs-updated', {
-      tabs: tabs.map(t => ({ id: t.id, url: t.url })),
+      tabs: tabs.map(t => ({id: t.id, url: t.url})),
       activeTabId
     });
   }
@@ -125,7 +130,7 @@ function sendTabsToRenderer() {
 
 // IPC handlers
 ipcMain.on('create-new-tab', () => {
-  const newTabId = createTab('https://github.com/electron/electron');
+  const newTabId = createTab(); // No URL needed, it loads the local file
   setActiveTab(newTabId);
 });
 

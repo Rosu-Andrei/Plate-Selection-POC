@@ -14,9 +14,8 @@ document.addEventListener('DOMContentLoaded', () => {
         tabEl.classList.add('active');
       }
 
-      const urlObj = new URL(tab.url);
       const tabTitle = document.createElement('span');
-      tabTitle.textContent = urlObj.hostname;
+      tabTitle.textContent = 'Plate Application'
       tabEl.appendChild(tabTitle);
 
       const closeBtn = document.createElement('div');
