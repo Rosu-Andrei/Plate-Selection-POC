@@ -1,5 +1,10 @@
 import { Component } from '@angular/core';
 
+type TabData = {
+  id: number
+  tabName: string
+}
+
 @Component({
   selector: 'app-plate-tabs',
   templateUrl: './plate-tabs.component.html',
@@ -11,18 +16,19 @@ export class PlateTabsComponent {
    * You can store any type of object here. For simplicity,
    * we'll store just an incrementing numeric ID.
    */
-  tabs: number[] = [1]; // Start with one tab open
+  tabs: TabData[] = [{id: 1, tabName: 'Tab 1'}]; // Start with one tab open
+  private nextTabId = 2;
 
   /**
-   * Add a new tab by pushing a unique number
-   * or any other data structure if you prefer.
+   * When a new tab is added, we increment the length of the 'tabs' array.
    */
   addTab(): void {
-    this.tabs.push(this.tabs.length + 1);
+    this.tabs.push({ id: this.nextTabId++, tabName: `Tab ${this.tabs.length + 1}` });
   }
 
   /**
-   * Remove a tab at a given index.
+   * When the user removes a certain tab in the browser, the application will
+   *
    */
   removeTab(index: number): void {
     this.tabs.splice(index, 1);

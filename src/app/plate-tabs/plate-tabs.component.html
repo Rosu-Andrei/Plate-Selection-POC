@@ -6,11 +6,11 @@
   <mat-tab-group>
     <mat-tab
       *ngFor="let tab of tabs; let i = index"
-      [label]="'Plate ' + tab"
+      [label]="'Plate ' + tab.id"
     >
       <!-- Optional: Tab content header with a remove button -->
       <div class="tab-header">
-        <h3>Plate {{ tab }}</h3>
+        <h3>Plate {{ tab.tabName }}</h3>
         <button mat-raised-button color="warn" (click)="removeTab(i)">Remove</button>
       </div>
 
