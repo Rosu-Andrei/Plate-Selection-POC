@@ -1,9 +1,10 @@
 import { Component } from '@angular/core';
 
+// A small TypeScript interface for tab data:
 type TabData = {
-  id: number
-  tabName: string
-}
+  id: number;
+  tabName: string;
+};
 
 @Component({
   selector: 'app-plate-tabs',
@@ -11,25 +12,20 @@ type TabData = {
   styleUrls: ['./plate-tabs.component.css'],
 })
 export class PlateTabsComponent {
-  /**
-   * Each item in this array represents a single tab.
-   * You can store any type of object here. For simplicity,
-   * we'll store just an incrementing numeric ID.
-   */
-  tabs: TabData[] = [{id: 1, tabName: 'Tab 1'}]; // Start with one tab open
+  tabs: TabData[] = [{ id: 1, tabName: 'Tab 1' }];
   private nextTabId = 2;
 
-  /**
-   * When a new tab is added, we increment the length of the 'tabs' array.
-   */
+  // Called by the "+ Add Tab" button in the template
   addTab(): void {
-    this.tabs.push({ id: this.nextTabId++, tabName: `Tab ${this.tabs.length + 1}` });
+    // Only try to use ipcRenderer if we are indeed inside Electron.
+    if ((window as any)?.require) {
+      const { ipcRenderer } = (window as any).require('electron');
+      ipcRenderer.send('new-tab');
+    } else {
+      console.warn('Not running inside Electron! Cannot create new tab.');
+    }
   }
 
-  /**
-   * When the user removes a certain tab in the browser, the application will
-   *
-   */
   removeTab(index: number): void {
     this.tabs.splice(index, 1);
   }

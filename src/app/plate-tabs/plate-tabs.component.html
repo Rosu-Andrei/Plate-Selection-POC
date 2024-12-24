@@ -2,13 +2,15 @@
   <button mat-raised-button color="primary" (click)="addTab()">+ Add Tab</button>
 
   <mat-tab-group>
-    <mat-tab *ngFor="let tab of tabs; let i = index"
-      [label]="'Plate ' + tab.id">
+    <mat-tab *ngFor="let tab of tabs; let i = index" [label]="'Plate ' + tab.id">
       <div class="tab-header">
         <h3>Plate {{ tab.tabName }}</h3>
-        <button mat-raised-button color="warn" (click)="removeTab(i)">Remove</button>
+        <button mat-raised-button color="warn" (click)="removeTab(i)">
+          Remove
+        </button>
       </div>
 
+      <!-- For demonstration, still show your multi-well-plate component -->
       <app-multi-well-plate></app-multi-well-plate>
     </mat-tab>
   </mat-tab-group>
