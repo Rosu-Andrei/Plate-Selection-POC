@@ -9,7 +9,7 @@ import {WellSelectionService} from '../services/well-selection.service';
   templateUrl: './multi-well-plate.component.html',
   styleUrls: ['./multi-well-plate.component.css'],
 
-  providers: [PlateService, WellSelectionService]
+  //providers: [PlateService, WellSelectionService]
 })
 export class MultiWellPlateComponent implements OnInit {
   faFlask = faFlask;
