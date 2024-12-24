@@ -1,0 +1,21 @@
+<div class="plate-tabs-container">
+  <!-- Add New Tab Button -->
+  <button mat-raised-button color="primary" (click)="addTab()">+ Add Tab</button>
+
+  <!-- Tabs Section -->
+  <mat-tab-group>
+    <mat-tab
+      *ngFor="let tab of tabs; let i = index"
+      [label]="'Plate ' + tab"
+    >
+      <!-- Optional: Tab content header with a remove button -->
+      <div class="tab-header">
+        <h3>Plate {{ tab }}</h3>
+        <button mat-raised-button color="warn" (click)="removeTab(i)">Remove</button>
+      </div>
+
+      <!-- Insert your multi-well-plate component for each tab -->
+      <app-multi-well-plate></app-multi-well-plate>
+    </mat-tab>
+  </mat-tab-group>
+</div>

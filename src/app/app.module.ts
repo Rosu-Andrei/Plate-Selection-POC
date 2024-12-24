@@ -9,11 +9,14 @@ import {MatRadioModule} from "@angular/material/radio";
 import {FormsModule} from "@angular/forms";
 import {MatButtonToggle} from "@angular/material/button-toggle";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
+import { PlateTabsComponent } from './plate-tabs/plate-tabs.component';
+import {MatTab, MatTabGroup} from "@angular/material/tabs";
 
 @NgModule({
   declarations: [
     AppComponent,
-    MultiWellPlateComponent
+    MultiWellPlateComponent,
+    PlateTabsComponent
   ],
   imports: [
     BrowserModule,
@@ -21,7 +24,9 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
     MatRadioModule,
     FormsModule,
     MatButtonToggle,
-    FontAwesomeModule
+    FontAwesomeModule,
+    MatTabGroup,
+    MatTab
   ],
   providers: [
     provideClientHydration(),
