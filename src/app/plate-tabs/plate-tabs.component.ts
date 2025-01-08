@@ -1,6 +1,8 @@
 import { Component } from '@angular/core';
 
-// A small TypeScript interface for tab data:
+/**
+ * this type is used to represent every tab created.
+ */
 type TabData = {
   id: number;
   tabName: string;
@@ -15,7 +17,10 @@ export class PlateTabsComponent {
   tabs: TabData[] = [{ id: 1, tabName: 'Tab 1' }];
   private nextTabId = 2;
 
-  // Called by the "+ Add Tab" button in the template
+  /**
+   * when the + sign is pressed, this method will send a message to the main
+   * electron application to create a new BrowserWindow.
+   */
   addTab(): void {
     // Only try to use ipcRenderer if we are indeed inside Electron.
     if ((window as any)?.require) {
@@ -26,6 +31,10 @@ export class PlateTabsComponent {
     }
   }
 
+  /**
+   * this method will only remove a tab from the Angular application side
+   * but will not impact the electron app.
+   */
   removeTab(index: number): void {
     this.tabs.splice(index, 1);
   }
