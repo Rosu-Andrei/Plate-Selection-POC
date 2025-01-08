@@ -31,8 +31,8 @@ export class PlateTabsComponent implements OnInit {
       const basePath = path.join(__dirname, 'dist', 'plate-app', 'browser', 'index.html');
 
       // In production, load the local file
-      //this.webviewUrl = `file://${basePath}`;
-      this.webviewUrl = 'http://localhost:4200';
+      this.webviewUrl = `file://${basePath}`;
+      //this.webviewUrl = 'http://localhost:4200';
     } else {
       // If not in Electron, fallback to dev server
       this.webviewUrl = 'http://localhost:4200';
