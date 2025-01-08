@@ -1,4 +1,4 @@
-const { app, BrowserWindow, ipcMain } = require('electron');
+const { app, BrowserWindow } = require('electron');
 const path = require('path');
 const url = require('url');
 
@@ -12,12 +12,14 @@ function createWindow() {
     width: 1200,
     height: 800,
     webPreferences: {
-      nodeIntegration: true, // Enables `require` in the renderer process
-      contextIsolation: false // Must be false when `nodeIntegration` is true
+      nodeIntegration: true,    // Enables `require` in the renderer process
+      contextIsolation: false,  // Must be false when `nodeIntegration` is true
+      webviewTag: true          // IMPORTANT: Enable <webview> usage in Renderer
     }
   });
 
   // Load the Angular app (compiled output in the `dist/` folder)
+  // Adjust this path to match your build output if necessary
   mainWindow.loadURL(
     url.format({
       pathname: path.join(__dirname, '/dist/plate-app/browser/index.html'),
@@ -31,39 +33,11 @@ function createWindow() {
   });
 }
 
-/**
- * Create a new window for each "tab".
- */
-function createNewTabWindow() {
-  const newTabWindow = new BrowserWindow({
-    width: 1000,
-    height: 700,
-    webPreferences: {
-      nodeIntegration: true,
-      contextIsolation: false,
-    },
-  });
-
-  newTabWindow.loadURL(
-    url.format({
-      pathname: path.join(__dirname, '/dist/plate-app/browser/index.html'),
-      protocol: 'file:',
-      slashes: true,
-    })
-  );
-}
-
-/**
- * Handle IPC events from the renderer process.
- */
-ipcMain.on('new-tab', () => {
-  createNewTabWindow();
-});
-
 // App lifecycle events
 app.whenReady().then(createWindow);
 
 app.on('window-all-closed', () => {
+  // Quit the app unless on macOS
   if (process.platform !== 'darwin') {
     app.quit();
   }
