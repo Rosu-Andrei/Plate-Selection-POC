@@ -1,8 +1,11 @@
-import { Component, OnInit } from '@angular/core';
+import { Component } from '@angular/core';
 
-/**
- * this type is used to represent every tab created.
- */
+declare global {
+  interface Window {
+    require: any;
+  }
+}
+
 type TabData = {
   id: number;
   tabName: string;
@@ -11,46 +14,50 @@ type TabData = {
 @Component({
   selector: 'app-plate-tabs',
   templateUrl: './plate-tabs.component.html',
-  styleUrls: ['./plate-tabs.component.css'],
+  styleUrls: ['./plate-tabs.component.css']
 })
-export class PlateTabsComponent implements OnInit {
+export class PlateTabsComponent {
   tabs: TabData[] = [{ id: 1, tabName: 'Tab 1' }];
-  private nextTabId = 2;
+  nextTabId = 2;
 
-  /**
-   * Path to the Angular app. This can be:
-   *  - 'http://localhost:4200' in development
-   *  - 'file:///...' pointing to dist folder in production
-   */
-  webviewUrl = '';
+  private ipcRenderer: any;
 
-  ngOnInit(): void {
-    // Check if we are in Electron
-    if ((window as any)?.process?.versions?.electron) {
-      const path = (window as any).require('path');
-      const basePath = path.join(__dirname, 'dist', 'plate-app', 'browser', 'index.html');
-
-      // In production, load the local file
-      this.webviewUrl = `file://${basePath}`;
-      //this.webviewUrl = 'http://localhost:4200';
-    } else {
-      // If not in Electron, fallback to dev server
-      this.webviewUrl = 'http://localhost:4200';
+  constructor() {
+    if ((window as any)?.require) {
+      const electron = (window as any).require('electron');
+      this.ipcRenderer = electron.ipcRenderer;
     }
   }
 
-  /**
-   * Adds a new in-app tab without spawning a new Electron BrowserWindow
-   */
+  ngOnInit(): void {
+    // Create the first BrowserView automatically
+    this.createTab(1);
+  }
+
   addTab(): void {
-    this.tabs.push({
-      id: this.nextTabId,
-      tabName: 'Tab ' + this.nextTabId
-    });
-    this.nextTabId++;
+    const newTabId = this.nextTabId++;
+    this.tabs.push({ id: newTabId, tabName: 'Tab ' + newTabId });
+    this.createTab(newTabId);
   }
 
   removeTab(index: number): void {
+    const removedTabId = this.tabs[index].id;
     this.tabs.splice(index, 1);
+
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('remove-tab', { tabId: removedTabId });
+    }
+  }
+
+  switchTab(tab: TabData): void {
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('switch-tab', { tabId: tab.id });
+    }
+  }
+
+  private createTab(tabId: number): void {
+    if (this.ipcRenderer) {
+      this.ipcRenderer.send('create-tab', { tabId });
+    }
   }
 }

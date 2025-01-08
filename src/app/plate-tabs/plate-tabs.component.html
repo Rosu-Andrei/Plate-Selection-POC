@@ -1,22 +1,18 @@
 <div class="plate-tabs-container">
   <button mat-raised-button color="primary" (click)="addTab()">+ Add Tab</button>
 
-  <mat-tab-group>
-    <mat-tab *ngFor="let tab of tabs; let i = index" [label]="tab.tabName">
-      <div class="tab-header">
-        <h3>Plate {{ tab.tabName }}</h3>
-        <button mat-raised-button color="warn" (click)="removeTab(i)">
-          Remove
-        </button>
-      </div>
-
-      <!-- This <webview> loads a fresh Angular instance for each tab -->
-      <webview
-      [id]="'webview-' + tab.id"
-      [src]="webviewUrl"
-      style="display: block; width: 100%; height: calc(100vh - 100px);"
-      nodeintegration
-      ></webview>
-    </mat-tab>
-  </mat-tab-group>
+  <!-- A simple inline "tab bar" for demonstration -->
+  <div class="tabs-list">
+    <div
+      class="tab-item"
+      *ngFor="let tab of tabs; let i = index"
+      (click)="switchTab(tab)"
+    >
+      <span>{{ tab.tabName }}</span>
+      <button mat-raised-button color="warn"
+              (click)="removeTab(i); $event.stopPropagation()">
+        Remove
+      </button>
+    </div>
+  </div>
 </div>
