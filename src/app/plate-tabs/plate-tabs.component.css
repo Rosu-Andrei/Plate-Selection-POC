@@ -25,3 +25,7 @@
 .tab-item:hover {
   background-color: #eaeaea;
 }
+
+.selected {
+  background-color: dimgrey;
+}

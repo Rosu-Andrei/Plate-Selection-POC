@@ -27,7 +27,7 @@ let activeViewId = null;
 function createWindow() {
   mainWindow = new BrowserWindow({
     width: 1200,
-    height: 800,
+    height: 1200,
     webPreferences: {
       nodeIntegration: true,
       contextIsolation: false
@@ -134,7 +134,7 @@ function setActiveBrowserView(tabId) {
   if (!entry) return;
 
   /**
-   * we clear the window of the current active tab
+   * we clear the window of the current active tab (not necessary needed but better to have it)
    */
   const currentActive = browserViews.find((bv) => bv.id === activeViewId);
   if (currentActive && mainWindow.getBrowserView() === currentActive.view) {
@@ -150,9 +150,9 @@ function setActiveBrowserView(tabId) {
   const [winWidth, winHeight] = mainWindow.getSize();
   entry.view.setBounds({
     x: 0,
-    y: 100,             // 50px top offset for the manager tab bar
+    y: 150,
     width: winWidth,
-    height: winHeight - 50
+    height: winHeight
   });
   entry.view.setAutoResize({width: true, height: true});
 }

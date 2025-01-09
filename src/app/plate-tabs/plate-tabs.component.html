@@ -5,6 +5,7 @@
       class="tab-item"
       *ngFor="let tab of tabs; let i = index"
       (click)="switchTab(tab)"
+      [class.selected]="tab.isSelected"
     >
       <span>{{ tab.tabName }}</span>
       <button mat-raised-button color="warn" (click)="removeTab(i); $event.stopPropagation()">

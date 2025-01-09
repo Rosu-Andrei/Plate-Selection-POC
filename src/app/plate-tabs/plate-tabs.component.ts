@@ -7,6 +7,7 @@ import {Component} from '@angular/core';
 type TabData = {
   id: number;
   tabName: string;
+  isSelected: boolean
 };
 
 @Component({
@@ -20,8 +21,8 @@ export class PlateTabsComponent {
    */
   tabs: TabData[] = [];
   nextTabId: number = 2; // we set the next id of a future tab to 2 because we now the first tab has an id of 1
-
   private ipcRenderer: any;
+  selectedTabId: number = 0;
 
   constructor() {
     if ((window as any)?.require) {
@@ -35,7 +36,8 @@ export class PlateTabsComponent {
    */
   ngOnInit(): void {
     this.createTab(1);
-    this.tabs.push({id: 1, tabName: 'Tab 1'});
+    this.tabs.push({id: 1, tabName: 'Tab 1', isSelected: true});
+    this.selectedTabId = 1;
   }
 
   /**
@@ -45,8 +47,14 @@ export class PlateTabsComponent {
    */
   addTab(): void {
     const newTabId = this.nextTabId++;
-    this.tabs.push({id: newTabId, tabName: 'Tab ' + newTabId});
+    this.tabs.push({id: newTabId, tabName: 'Tab ' + newTabId, isSelected: true});
     this.createTab(newTabId);
+    let currentSelectedTab = this.tabs.find(tabData => tabData.id == this.selectedTabId);
+    if (currentSelectedTab == undefined) {
+      return;
+    }
+    currentSelectedTab.isSelected = false;
+    this.selectedTabId = newTabId;
   }
 
   /**
@@ -69,6 +77,15 @@ export class PlateTabsComponent {
     if (this.ipcRenderer) {
       this.ipcRenderer.send('switch-tab', {tabId: tab.id});
     }
+
+    let currentSelectedTab = this.tabs.find(tabData => tabData.id == this.selectedTabId);
+    if (currentSelectedTab == undefined) {
+      return;
+    }
+    currentSelectedTab.isSelected = false;
+    this.selectedTabId = tab.id;
+    tab.isSelected = true;
+
   }
 
   /**
