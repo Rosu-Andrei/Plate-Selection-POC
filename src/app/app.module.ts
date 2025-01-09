@@ -11,6 +11,7 @@ import {MatButtonToggle} from "@angular/material/button-toggle";
 import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {PlateTabsComponent} from './plate-tabs/plate-tabs.component';
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
+import {MatButton} from "@angular/material/button";
 
 @NgModule({
   declarations: [
@@ -18,16 +19,17 @@ import {MatTab, MatTabGroup} from "@angular/material/tabs";
     MultiWellPlateComponent,
     PlateTabsComponent
   ],
-  imports: [
-    BrowserModule,
-    AppRoutingModule,
-    MatRadioModule,
-    FormsModule,
-    MatButtonToggle,
-    FontAwesomeModule,
-    MatTabGroup,
-    MatTab
-  ],
+    imports: [
+        BrowserModule,
+        AppRoutingModule,
+        MatRadioModule,
+        FormsModule,
+        MatButtonToggle,
+        FontAwesomeModule,
+        MatTabGroup,
+        MatTab,
+        MatButton
+    ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   providers: [
     provideClientHydration(),

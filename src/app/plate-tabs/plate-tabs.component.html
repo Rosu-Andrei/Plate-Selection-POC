@@ -1,7 +1,5 @@
 <div class="plate-tabs-container">
   <button mat-raised-button color="primary" (click)="addTab()">+ Add Tab</button>
-
-  <!-- A simple inline "tab bar" for demonstration -->
   <div class="tabs-list">
     <div
       class="tab-item"
@@ -9,8 +7,7 @@
       (click)="switchTab(tab)"
     >
       <span>{{ tab.tabName }}</span>
-      <button mat-raised-button color="warn"
-              (click)="removeTab(i); $event.stopPropagation()">
+      <button mat-raised-button color="warn" (click)="removeTab(i); $event.stopPropagation()">
         Remove
       </button>
     </div>

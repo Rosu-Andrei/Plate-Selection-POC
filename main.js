@@ -1,3 +1,11 @@
+/**
+ * Here we import several things from the electron module that we require to make the Electron application work:
+ * 1. app -> controls the lifecycle of the Electron application (when it starts, when it quits)
+ * 2. BrowserWindow -> represents the window of the Desktop Application that will contain all the other things
+ * 3. BrowserView -> represents the content of each tab. Each BrowserView in this scenario is an instance of the multi well
+ * plate application that runs as an independent process.
+ * 4.
+ */
 const { app, BrowserWindow, BrowserView, ipcMain } = require('electron');
 const path = require('path');
 
