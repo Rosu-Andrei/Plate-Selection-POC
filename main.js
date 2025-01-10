@@ -102,24 +102,30 @@ function setupIpcHandlers() {
 
     const entry = webContentsViews[index];
     if (!entry || !entry.webView) {
-      console.error(`No valid BrowserView found for tabId: ${tabId}`);
+      console.error(`No valid WebContent found for tabId: ${tabId}`);
       return;
     }
 
     const {webView} = entry;
 
-    // If currently active, remove from the window
+    /**
+     * remove the currently active view from main window
+     */
     if (mainWindow && mainWindow.getBrowserView() === webView) {
       mainWindow.setBrowserView(null);
     }
 
-    // Safely destroy the view and remove it from the array
+    /**
+     * destroy the view and remove it from the webContentsViews array
+     */
     if (webView.webContents) {
       webView.webContents.destroy();
     }
     webContentsViews.splice(index, 1);
 
-    // Update the active tab if necessary
+    /**
+     * if we remove the current active tab, then the next active tab will be the first one in the array
+     */
     if (activeViewId === tabId) {
       if (webContentsViews.length > 0) {
         setActiveBrowserView(webContentsViews[0].id);
