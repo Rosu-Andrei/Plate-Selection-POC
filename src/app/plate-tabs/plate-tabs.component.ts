@@ -1,10 +1,11 @@
 import {Component} from '@angular/core';
+import {ElectronService} from "../services/electron.service";
 
 /**
  * represents the individual data for each tab, in this case a tab has:
  * id and a name
  */
-type TabData = {
+export type TabData = {
   id: number;
   tabName: string;
   isSelected: boolean
@@ -21,14 +22,9 @@ export class PlateTabsComponent {
    */
   tabs: TabData[] = [];
   nextTabId: number = 2; // we set the next id of a future tab to 2 because we now the first tab has an id of 1
-  private ipcRenderer: any;
   selectedTabId: number = 0;
 
-  constructor() {
-    if ((window as any)?.require) {
-      const electron = (window as any).require('electron');
-      this.ipcRenderer = electron.ipcRenderer;
-    }
+  constructor(private electronService: ElectronService) {
   }
 
   /**
@@ -64,20 +60,21 @@ export class PlateTabsComponent {
   removeTab(index: number): void {
     const removedTabId = this.tabs[index].id;
     this.tabs.splice(index, 1);
-
-    if (this.ipcRenderer) {
-      this.ipcRenderer.send('remove-tab', {tabId: removedTabId});
+    this.electronService.removeTab(removedTabId);
+    if (!this.tabs[index].isSelected) {
+      return;
+    } else {
+      this.selectedTabId = this.tabs[0].id;
+      this.tabs[0].isSelected = true;
     }
+
   }
 
   /**
    * Captures the click event of a respective tab and send that information to the main electron process
    */
   switchTab(tab: TabData): void {
-    if (this.ipcRenderer) {
-      this.ipcRenderer.send('switch-tab', {tabId: tab.id});
-    }
-
+    this.electronService.switchTab(tab);
     let currentSelectedTab = this.tabs.find(tabData => tabData.id == this.selectedTabId);
     if (currentSelectedTab == undefined) {
       return;
@@ -93,8 +90,6 @@ export class PlateTabsComponent {
    * to which will also add a new BrowserView for the respective tabId.
    */
   private createTab(tabId: number): void {
-    if (this.ipcRenderer) {
-      this.ipcRenderer.send('create-tab', {tabId});
-    }
+    this.electronService.createTab(tabId);
   }
 }
