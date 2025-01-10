@@ -6,16 +6,16 @@
  * plate application that runs as an independent process.
  * 4. ipcMain -> handles the inter process communication between the main process and the render ones. (from each tab)
  */
-const {app, BrowserWindow, BrowserView, ipcMain} = require('electron');
+const {app, BrowserWindow, ipcMain, WebContentsView} = require('electron');
 const path = require('path');
 
 let mainWindow = null; // use to track the BrowserWindow
 
 /**
  * This array will track our BrowserViews (one per "tab").
- * Each entry: { id: number, view: BrowserView }
+ * Each entry: { id: number, webView: WebContentsView }
  */
-let browserViews = [];
+let webContentsViews = [];
 /**
  * keeps track of the current active tab.
  */
@@ -38,7 +38,6 @@ function createWindow() {
    */
   const url = 'http://localhost:4200/manager';
   mainWindow.loadURL(url);
-
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -57,9 +56,9 @@ function setupIpcHandlers() {
    */
   ipcMain.on('create-tab', (event, {tabId}) => {
     /**
-     * create a new BrowserView for the tab
+     * create a new WebContentsView for the tab content
      */
-    const view = new BrowserView({
+    const webView = new WebContentsView({
       webPreferences: {
         nodeIntegration: false, // Typically false for security
         contextIsolation: true
@@ -67,14 +66,18 @@ function setupIpcHandlers() {
     });
 
     /**
+     * we add the new WebContentView to the BrowserWindow
+     */
+    mainWindow.contentView.addChildView(webView);
+    /**
      * we load in the new BrowserView the plate application by using its route.
      */
     const plateUrl = 'http://localhost:4200/plate';
-    view.webContents.loadURL(plateUrl);
+    webView.webContents.loadURL(plateUrl);
     /**
      * we push the new BrowserView and its tabId into the array to keep track of it
      */
-    browserViews.push({id: tabId, view});
+    webContentsViews.push({id: tabId, webView: webView});
 
     /**
      * we want any newly created tab to be selected.
@@ -94,32 +97,38 @@ function setupIpcHandlers() {
    * listens to the removal of a tab by the user.
    */
   ipcMain.on('remove-tab', (event, {tabId}) => {
-    const index = browserViews.findIndex(bv => bv.id === tabId);
+    const index = webContentsViews.findIndex(bv => bv.id === tabId);
     if (index === -1) return;
-    const {view} = browserViews[index];
+
+    const entry = webContentsViews[index];
+    if (!entry || !entry.webView) {
+      console.error(`No valid BrowserView found for tabId: ${tabId}`);
+      return;
+    }
+
+    const {webView} = entry;
 
     // If currently active, remove from the window
-    if (mainWindow && mainWindow.getBrowserView() === view) {
+    if (mainWindow && mainWindow.getBrowserView() === webView) {
       mainWindow.setBrowserView(null);
     }
 
-    /**
-     * we destroy the view, and we remove it from the array
-     */
-    view.webContents.destroy();
-    browserViews.splice(index, 1);
+    // Safely destroy the view and remove it from the array
+    if (webView.webContents) {
+      webView.webContents.destroy();
+    }
+    webContentsViews.splice(index, 1);
 
-    /**
-     * if the active tab is the one that is deleted, then we set the active tab the first one in the array.
-     */
+    // Update the active tab if necessary
     if (activeViewId === tabId) {
-      if (browserViews.length > 0) {
-        setActiveBrowserView(browserViews[0].id);
+      if (webContentsViews.length > 0) {
+        setActiveBrowserView(webContentsViews[0].id);
       } else {
         activeViewId = null;
       }
     }
   });
+
 }
 
 /**
@@ -130,31 +139,30 @@ function setActiveBrowserView(tabId) {
   /**
    * extract the browserView from the array based on its tabId we receive from the Tab Component
    */
-  const entry = browserViews.find((bv) => bv.id === tabId);
+  const entry = webContentsViews.find((wv) => wv.id === tabId);
   if (!entry) return;
 
   /**
    * we clear the window of the current active tab (not necessary needed but better to have it)
    */
-  const currentActive = browserViews.find((bv) => bv.id === activeViewId);
-  if (currentActive && mainWindow.getBrowserView() === currentActive.view) {
-    mainWindow.setBrowserView(null);
+  const currentActive = webContentsViews.find((wv) => wv.id === activeViewId);
+  if (currentActive && currentActive.webView.webContents && mainWindow.webContents === currentActive.webView.webContents) {
+    mainWindow.webContents = null;
   }
 
   /**
    * we attach the new view that the user clicked on as the one to be rendered in the main window (BrowserWindow)
    */
-  mainWindow.setBrowserView(entry.view);
+  mainWindow.contentView.addChildView(entry.webView);
   activeViewId = tabId; // we set its id as the activeViewId
 
   const [winWidth, winHeight] = mainWindow.getSize();
-  entry.view.setBounds({
+  entry.webView.setBounds({
     x: 0,
     y: 150,
     width: winWidth,
     height: winHeight
   });
-  entry.view.setAutoResize({width: true, height: true});
 }
 
 /**
