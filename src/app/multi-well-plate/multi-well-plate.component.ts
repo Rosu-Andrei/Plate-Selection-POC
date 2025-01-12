@@ -3,6 +3,7 @@ import {faBars, faFlask, faSearchMinus, faSearchPlus,} from '@fortawesome/free-s
 import {mockWells, Well} from '../model/well';
 import {PlateService} from '../services/plate.service';
 import {WellSelectionService} from '../services/well-selection.service';
+import {ActivatedRoute} from "@angular/router";
 
 @Component({
   selector: 'app-multi-well-plate',
@@ -30,11 +31,26 @@ export class MultiWellPlateComponent implements OnInit {
 
   constructor(
     public plateService: PlateService,
-    public selectionService: WellSelectionService
+    public selectionService: WellSelectionService,
+    private route: ActivatedRoute
   ) {
   }
 
   ngOnInit(): void {
+    this.route.paramMap.subscribe((params) => {
+      const sizeParam = params.get('size');
+      console.log("Size param is: " + sizeParam);
+      if (sizeParam) {
+        const plateSize = +sizeParam;
+        if (plateSize === 96 || plateSize === 384) {
+          this.plateService.setupPlate(plateSize);
+          this.selectionService.clearSelection();
+          this.selectionService.initializeWorker();
+        } else {
+          console.log("Plate size: " + plateSize + " is not supported");
+        }
+      }
+    });
     /**
      * we subscribe to the Subject so that we receive the array that contains only the wells
      * that have been selected currently.
@@ -45,6 +61,7 @@ export class MultiWellPlateComponent implements OnInit {
         this.updateSampleInfo();
       }
     );
+
   }
 
   get cellSize(): number {

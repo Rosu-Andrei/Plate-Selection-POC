@@ -31,7 +31,7 @@ export class PlateTabsComponent {
    * we create the first tab in the electron application for the tab with id 1
    */
   ngOnInit(): void {
-    this.createTab(1);
+    this.createTab(1, 96);
     this.tabs.push({id: 1, tabName: 'Tab 1', isSelected: true});
     this.selectedTabId = 1;
   }
@@ -41,10 +41,10 @@ export class PlateTabsComponent {
    * will add a new object in the tabs array and in the end will call the 'createTab' method
    * that will send a message back to the main electron process.
    */
-  addTab(): void {
+  addTab(plateSize: number = 96): void {
     const newTabId = this.nextTabId++;
     this.tabs.push({id: newTabId, tabName: 'Tab ' + newTabId, isSelected: true});
-    this.createTab(newTabId);
+    this.createTab(newTabId, plateSize);
     let currentSelectedTab = this.tabs.find(tabData => tabData.id == this.selectedTabId);
     if (currentSelectedTab == undefined) {
       return;
@@ -89,7 +89,7 @@ export class PlateTabsComponent {
    * this method sends a message to the electron main process to create a new tab
    * to which will also add a new BrowserView for the respective tabId.
    */
-  private createTab(tabId: number): void {
-    this.electronService.createTab(tabId);
+  private createTab(tabId: number, plateSize: number): void {
+    this.electronService.createTab(tabId, plateSize);
   }
 }

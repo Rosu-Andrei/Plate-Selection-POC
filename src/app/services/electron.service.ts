@@ -14,9 +14,9 @@ export class ElectronService {
     }
   }
 
-  public createTab(tabId: number) {
+  public createTab(tabId: number, plateSize: number) {
     if (this.ipcRenderer) {
-      this.ipcRenderer.send('create-tab', {tabId});
+      this.ipcRenderer.send('create-tab', {tabId, plateSize});
     }
   }
 

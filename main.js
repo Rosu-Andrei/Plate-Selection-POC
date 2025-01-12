@@ -54,7 +54,7 @@ function setupIpcHandlers() {
    * a message to the main window. The main window receives the message together with the tabId
    * of the newly created tab.
    */
-  ipcMain.on('create-tab', (event, {tabId}) => {
+  ipcMain.on('create-tab', (event, {tabId, plateSize}) => {
     /**
      * create a new WebContentsView for the tab content
      */
@@ -72,7 +72,7 @@ function setupIpcHandlers() {
     /**
      * we load in the new BrowserView the plate application by using its route.
      */
-    const plateUrl = 'http://localhost:4200/plate';
+    const plateUrl = `http://localhost:4200/#/plate/${plateSize}`;
     webView.webContents.loadURL(plateUrl);
     /**
      * we push the new BrowserView and its tabId into the array to keep track of it
