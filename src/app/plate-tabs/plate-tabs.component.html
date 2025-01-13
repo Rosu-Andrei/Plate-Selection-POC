@@ -3,7 +3,7 @@
   <div class="tabs-list">
     <div
       class="tab-item"
-      *ngFor="let tab of tabs; let i = index"
+      *ngFor="let tab of getTabs(); let i = index"
       (click)="switchTab(tab)"
       [class.selected]="tab.isSelected"
     >
