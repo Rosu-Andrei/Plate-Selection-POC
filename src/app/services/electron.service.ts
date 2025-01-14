@@ -12,6 +12,10 @@ export class ElectronService {
   public tabs: TabData[] = [];
   private nextTabId: number = 1;
   private selectedTabId: number = 0;
+  /**
+   * this parameter is used when a new Tab is created and no tab name is provided
+   */
+  private defaultTabName = 'Tab';
 
   constructor() {
     if ((window as any)?.require) {
@@ -27,8 +31,8 @@ export class ElectronService {
   public initializeTabs(): void {
     this.addTab();
     for (let i = 0; i < 2; i++)
-      this.addTab(96);
-    this.addTab(384);
+      this.addTab(96, 'Analysis');
+    this.addTab(384, 'Quanti');
   }
 
   /**
@@ -36,11 +40,17 @@ export class ElectronService {
    * will add a new object in the tabs array and in the end will call the 'createTab' method
    * that will send a message back to the main electron process.
    */
-  public addTab(plateSize?: number): void {
+  public addTab(plateSize?: number, tabName?: string): void {
+
+    /**
+     * check if tabName exists, otherwise use default value.
+     */
+    tabName = tabName == undefined ? this.defaultTabName : tabName;
+
     const newTabId = this.nextTabId++;
     const newTab: TabData = {
       id: newTabId,
-      tabName: `Tab ${newTabId}`,
+      tabName: `${tabName} ${newTabId}`,
       isSelected: true,
     };
     const currentSelectedTab = this.tabs.find(tab => tab.id === this.selectedTabId);
@@ -66,7 +76,8 @@ export class ElectronService {
    */
   public removeTab(tabId: number): void {
     const tabIndex = this.tabs.findIndex(tab => tab.id === tabId);
-    if (tabIndex === -1) return;
+    if (tabIndex === -1)
+      return;
 
     this.tabs.splice(tabIndex, 1);
 
@@ -118,6 +129,5 @@ export class ElectronService {
   public getTabs(): TabData[] {
     return this.tabs;
   }
-
 
 }

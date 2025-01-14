@@ -22,14 +22,14 @@ export class PlateTabsComponent {
   }
 
   /**
-   * we create the first tab in the electron application for the tab with id 1
+   * this method creates initially 4 tabs inside the electron application
    */
   ngOnInit(): void {
     this.electronService.initializeTabs();
   }
 
   addTab(): void {
-    this.electronService.addTab(96);
+    this.electronService.addTab(96, 'Analysis');
   }
 
   removeTab(index: number): void {
