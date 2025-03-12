@@ -4,6 +4,7 @@ import {mockWells, Well} from '../model/well';
 import {PlateService} from '../services/plate.service';
 import {WellSelectionService} from '../services/well-selection.service';
 import {ActivatedRoute} from "@angular/router";
+import {Subscription} from "rxjs";
 
 @Component({
   selector: 'app-multi-well-plate',
@@ -27,7 +28,7 @@ export class MultiWellPlateComponent implements OnInit {
   selectedWellsPositions: string = ''; // IDs of selected wells
 
   baseCellSize: number = 30; // Base size for cells in pixels
-
+  private routeSub!: Subscription;
 
   constructor(
     public plateService: PlateService,
@@ -37,9 +38,10 @@ export class MultiWellPlateComponent implements OnInit {
   }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((params) => {
+    this.routeSub = this.route.paramMap.subscribe(params => {
       const sizeParam = params.get('size');
       console.log("Size param is: " + sizeParam);
+
       if (sizeParam) {
         const plateSize = +sizeParam;
         if (plateSize === 96 || plateSize === 384) {
