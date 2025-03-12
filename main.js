@@ -72,7 +72,7 @@ function setupIpcHandlers() {
     /**
      * we load in the new BrowserView the plate application by using its route.
      */
-    const plateUrl = `http://localhost:4200/#/plate/${plateSize}`;
+    const plateUrl = `http://localhost:4200/plate`;
     webView.webContents.loadURL(plateUrl);
     /**
      * we push the new BrowserView and its tabId into the array to keep track of it
