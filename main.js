@@ -6,7 +6,7 @@
  * plate application that runs as an independent process.
  * 4. ipcMain -> handles the inter process communication between the main process and the render ones. (from each tab)
  */
-const {app, BrowserWindow, ipcMain, WebContentsView} = require('electron');
+const {app, BrowserWindow, ipcMain, WebContentsView, BrowserView} = require('electron');
 const path = require('path');
 
 let mainWindow = null; // use to track the BrowserWindow
@@ -36,7 +36,7 @@ function createWindow() {
   /**
    * when the application launches, we load a tab component.
    */
-  const url = 'http://localhost:4200/manager';
+  const url = 'http://localhost:4200/#/manager';
   mainWindow.loadURL(url);
   mainWindow.on('closed', () => {
     mainWindow = null;
@@ -58,7 +58,7 @@ function setupIpcHandlers() {
     /**
      * create a new WebContentsView for the tab content
      */
-    const webView = new WebContentsView({
+    const webView = new BrowserView({
       webPreferences: {
         nodeIntegration: false, // Typically false for security
         contextIsolation: true
@@ -68,11 +68,11 @@ function setupIpcHandlers() {
     /**
      * we add the new WebContentView to the BrowserWindow
      */
-    mainWindow.contentView.addChildView(webView);
+    mainWindow.setBrowserView(webView);
     /**
      * we load in the new BrowserView the plate application by using its route.
      */
-    const plateUrl = `http://localhost:4200/#/plate/${plateSize}`;
+    const plateUrl = `http://localhost:4200/#/plate/${plateSize}`; // change to use the dist folder generated after built
     webView.webContents.loadURL(plateUrl);
     /**
      * we push the new BrowserView and its tabId into the array to keep track of it
@@ -126,13 +126,13 @@ function setupIpcHandlers() {
     /**
      * if we remove the current active tab, then the next active tab will be the first one in the array
      */
-    if (activeViewId === tabId) {
+    /*if (activeViewId === tabId) {
       if (webContentsViews.length > 0) {
         setActiveBrowserView(webContentsViews[0].id);
       } else {
         activeViewId = null;
       }
-    }
+    }*/
   });
 
 }
@@ -151,16 +151,16 @@ function setActiveBrowserView(tabId) {
   /**
    * we clear the window of the current active tab (not necessary needed but better to have it)
    */
-  const currentActive = webContentsViews.find((wv) => wv.id === activeViewId);
+  /*const currentActive = webContentsViews.find((wv) => wv.id === activeViewId);
   if (currentActive && currentActive.webView.webContents && mainWindow.webContents === currentActive.webView.webContents) {
     mainWindow.webContents = null;
-  }
+  }*/
 
   /**
    * we attach the new view that the user clicked on as the one to be rendered in the main window (BrowserWindow)
    */
-  mainWindow.contentView.addChildView(entry.webView);
-  activeViewId = tabId; // we set its id as the activeViewId
+    //mainWindow.contentView.addChildView(entry.webView);
+    //activeViewId = tabId; // we set its id as the activeViewId
 
   const [winWidth, winHeight] = mainWindow.getSize();
   entry.webView.setBounds({
@@ -169,6 +169,9 @@ function setActiveBrowserView(tabId) {
     width: winWidth,
     height: winHeight
   });
+
+  mainWindow.setBrowserView(entry.webView);
+  activeViewId = tabId;
 }
 
 /**

@@ -29,3 +29,10 @@
 .selected {
   background-color: dimgrey;
 }
+
+dialog {
+  position: fixed;
+  left: 50%;
+  top: 50px;
+
+}
