@@ -1,0 +1,12 @@
+<h2 mat-dialog-title> Select an Option </h2>
+<mat-dialog-content>
+  <mat-form-field>
+    <mat-label>Choose</mat-label>
+    <mat-select>
+      <mat-option *ngFor="let option of options" [value]="option">
+        {{ option }}
+      </mat-option>
+    </mat-select>
+  </mat-form-field>
+</mat-dialog-content>
+<mat-dialog-actions (click)="close()">Close</mat-dialog-actions>

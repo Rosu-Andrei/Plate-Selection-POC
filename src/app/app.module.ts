@@ -12,24 +12,35 @@ import {FontAwesomeModule} from "@fortawesome/angular-fontawesome";
 import {PlateTabsComponent} from './plate-tabs/plate-tabs.component';
 import {MatTab, MatTabGroup} from "@angular/material/tabs";
 import {MatButton} from "@angular/material/button";
+import { SelectDialogComponent } from './select-dialog/select-dialog.component';
+import {MatDialogActions, MatDialogContent, MatDialogTitle} from "@angular/material/dialog";
+import {MatFormField} from "@angular/material/form-field";
+import {MatOption, MatSelect} from "@angular/material/select";
 
 @NgModule({
   declarations: [
     AppComponent,
     MultiWellPlateComponent,
-    PlateTabsComponent
+    PlateTabsComponent,
+    SelectDialogComponent
   ],
-    imports: [
-        BrowserModule,
-        AppRoutingModule,
-        MatRadioModule,
-        FormsModule,
-        MatButtonToggle,
-        FontAwesomeModule,
-        MatTabGroup,
-        MatTab,
-        MatButton
-    ],
+  imports: [
+    BrowserModule,
+    AppRoutingModule,
+    MatRadioModule,
+    FormsModule,
+    MatButtonToggle,
+    FontAwesomeModule,
+    MatTabGroup,
+    MatTab,
+    MatButton,
+    MatDialogTitle,
+    MatDialogContent,
+    MatFormField,
+    MatSelect,
+    MatOption,
+    MatDialogActions
+  ],
   schemas: [CUSTOM_ELEMENTS_SCHEMA, NO_ERRORS_SCHEMA],
   providers: [
     provideClientHydration(),

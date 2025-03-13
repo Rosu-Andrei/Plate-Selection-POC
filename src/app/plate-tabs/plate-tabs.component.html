@@ -11,17 +11,9 @@
       <button mat-raised-button color="warn" (click)="removeTab(i); $event.stopPropagation()">
         Remove
       </button>
-      <dialog open #dialog>
-        <select>
-          <option>A</option>
-          <option>B</option>
-          <option>C</option>
-          <option>D</option>
-          <option>E</option>
-          <option>F</option>
-        </select>
-        <button (click)="dialog.close()">Close</button>
-      </dialog>
     </div>
+    <button mat-button (click)="openDialog(); $event.stopPropagation()">
+      Open Dialog
+    </button>
   </div>
 </div>

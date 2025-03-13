@@ -1,5 +1,7 @@
 import {Component} from '@angular/core';
 import {ElectronService} from "../services/electron.service";
+import {MatDialog} from "@angular/material/dialog";
+import {SelectDialogComponent} from "../select-dialog/select-dialog.component";
 
 /**
  * represents the individual data for each tab, in this case a tab has:
@@ -18,7 +20,8 @@ export type TabData = {
 })
 export class PlateTabsComponent {
 
-  constructor(public electronService: ElectronService) {
+  constructor(public electronService: ElectronService,
+              private dialog: MatDialog) {
   }
 
   /**
@@ -46,4 +49,14 @@ export class PlateTabsComponent {
   getTabs(): TabData[] {
     return this.electronService.getTabs();
   }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(SelectDialogComponent);
+    this.electronService.openDialog();
+
+    dialogRef.afterClosed().subscribe(() => {
+      this.electronService.closeDialog();
+    })
+  }
+
 }

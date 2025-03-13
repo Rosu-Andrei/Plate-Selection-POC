@@ -36,8 +36,9 @@ function createWindow() {
   /**
    * when the application launches, we load a tab component.
    */
-  const url = 'http://localhost:4200/#/manager';
-  mainWindow.loadURL(url);
+    //const url = 'http://localhost:4200/#/manager';
+  const pathUrl = `file://${path.join(__dirname, 'dist', 'plate-app', 'browser', 'index.html')}#/manager`
+  mainWindow.loadURL(pathUrl);
   mainWindow.on('closed', () => {
     mainWindow = null;
   });
@@ -61,7 +62,8 @@ function setupIpcHandlers() {
     const webView = new BrowserView({
       webPreferences: {
         nodeIntegration: false, // Typically false for security
-        contextIsolation: true
+        contextIsolation: true,
+        webSecurity: false
       }
     });
 
@@ -72,7 +74,7 @@ function setupIpcHandlers() {
     /**
      * we load in the new BrowserView the plate application by using its route.
      */
-    const plateUrl = `http://localhost:4200/#/plate/${plateSize}`; // change to use the dist folder generated after built
+    const plateUrl = `file://${path.join(__dirname, 'dist', 'plate-app', 'browser', 'index.html')}#/plate/${plateSize}`; // change to use the dist folder generated after built
     webView.webContents.loadURL(plateUrl);
     /**
      * we push the new BrowserView and its tabId into the array to keep track of it
@@ -133,6 +135,22 @@ function setupIpcHandlers() {
         activeViewId = null;
       }
     }*/
+  });
+
+  ipcMain.on('open-dialog', () => {
+    if (mainWindow && mainWindow.getBrowserView()) {
+      mainWindow.setBrowserView(null);
+    }
+  });
+
+  ipcMain.on('close-dialog', () => {
+
+    if (activeViewId) {
+      const entry = webContentsViews.find((bv) => bv.id === activeViewId);
+      if (entry) {
+        mainWindow.setBrowserView(entry.webView);
+      }
+    }
   });
 
 }

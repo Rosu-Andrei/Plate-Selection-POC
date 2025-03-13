@@ -130,4 +130,12 @@ export class ElectronService {
     return this.tabs;
   }
 
+  public openDialog() {
+    this.ipcRenderer.send('open-dialog');
+  }
+
+  public closeDialog() {
+    this.ipcRenderer.send('close-dialog');
+  }
+
 }
