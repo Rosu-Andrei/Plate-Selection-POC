@@ -3,8 +3,8 @@
   <div class="tabs-list">
     <div
       class="tab-item"
-      *ngFor="let tab of getTabs(); let i = index"
-      (click)="switchTab(tab)"
+      *ngFor="let tab of tabs; let i = index"
+      (click)="switchTab(i)"
       [class.selected]="tab.isSelected"
     >
       <span>{{ tab.tabName }}</span>
@@ -16,4 +16,8 @@
       Open Dialog
     </button>
   </div>
+</div>
+
+<div *ngFor="let tab of tabs" class="tab-content" [class.hidden]="!tab.isSelected">
+  <app-multi-well-plate [tabId]="tab.id"></app-multi-well-plate>
 </div>

@@ -1,4 +1,4 @@
-import {Component, OnInit} from '@angular/core';
+import {Component, Input, OnInit} from '@angular/core';
 import {faBars, faFlask, faSearchMinus, faSearchPlus,} from '@fortawesome/free-solid-svg-icons';
 import {mockWells, Well} from '../model/well';
 import {PlateService} from '../services/plate.service';
@@ -12,8 +12,7 @@ import {SelectDialogComponent} from "../select-dialog/select-dialog.component";
   selector: 'app-multi-well-plate',
   templateUrl: './multi-well-plate.component.html',
   styleUrls: ['./multi-well-plate.component.css'],
-
-  //providers: [PlateService, WellSelectionService]
+  providers: [PlateService, WellSelectionService]
 })
 export class MultiWellPlateComponent implements OnInit {
   faFlask = faFlask;
@@ -31,6 +30,7 @@ export class MultiWellPlateComponent implements OnInit {
 
   baseCellSize: number = 30; // Base size for cells in pixels
   private routeSub!: Subscription;
+  @Input() tabId?: number;
 
   constructor(
     public plateService: PlateService,

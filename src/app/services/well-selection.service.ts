@@ -1,4 +1,4 @@
-import {Injectable} from '@angular/core';
+import {Injectable, NgZone} from '@angular/core';
 import {PlateService} from './plate.service';
 import {Well} from '../model/well';
 import {SelectionModel} from '@angular/cdk/collections';
@@ -22,7 +22,7 @@ export class WellSelectionService {
    */
   public selectionChangeSubject = new Subject<Well[]>();
 
-  constructor(private plateService: PlateService) {
+  constructor(private plateService: PlateService, private ngZone: NgZone) {
     if (typeof Worker !== 'undefined') {
       // Create a new web worker
       this.worker = new Worker(
@@ -34,17 +34,19 @@ export class WellSelectionService {
        * has done all its job. Think of it as Future Promise.
        */
       this.worker.onmessage = ({data}) => {
+        this.ngZone.run(() => {
+          const message = data;
+          /**
+           * if the message type is equal to "selectionUpdate", this means
+           * that a selection update has happened.
+           * The payload that is coming back from the web worker is the Set with the well ids that
+           * are up for selection
+           */
+          if (message.type === 'selectionUpdate') {
+            this.updateSelectionModel(message.payload);
+          }
+        });
 
-        const message = data;
-        /**
-         * if the message type is equal to "selectionUpdate", this means
-         * that a selection update has happened.
-         * The payload that is coming back from the web worker is the Set with the well ids that
-         * are up for selection
-         */
-        if (message.type === 'selectionUpdate') {
-          this.updateSelectionModel(message.payload);
-        }
       };
       /**
        * the main thread sends to the worker an "initialize" message that will

@@ -20,30 +20,70 @@ export type TabData = {
 })
 export class PlateTabsComponent {
 
+  /**
+   * The tabs array is used to keep track of all the current existing tabs in the application.
+   * The 'nextTabId' represents what id will be assign to a new tab created.
+   */
+  public tabs: TabData[] = [];
+  private nextTabId: number = 1;
+
+
   constructor(public electronService: ElectronService,
               private dialog: MatDialog) {
   }
 
   /**
-   * this method creates initially 4 tabs inside the electron application
+   * this method creates initially only 1 tab.
    */
   ngOnInit(): void {
-    this.electronService.initializeTabs();
+    this.addTab();
   }
 
+  /**
+   * the addTab() method is responsible to create a new entry in the tabs array
+   */
   addTab(): void {
-    this.electronService.addTab(96, 'Analysis');
+    const newId = this.nextTabId;
+    /**
+     * deselect all the tabs
+     */
+    this.tabs.forEach(tab => tab.isSelected = false);
+    /**
+     * create a new TabData entry in the tabs array. We make sure that the newly created
+     * tab is selected.
+     */
+    this.tabs.push({
+      id: newId,
+      tabName: 'Plate Tab ' + newId,
+      isSelected: true
+    });
+    this.nextTabId++;
   }
 
   removeTab(index: number): void {
-    const tab = this.electronService.getTabs()[index];
-    if (tab) {
-      this.electronService.removeTab(tab.id);
+    /**
+     * we remove from the tabs array the TabData of the corresponding index.
+     */
+    const tabToBeRemoved = this.tabs[index];
+    this.tabs.splice(index, 1);
+
+    /**
+     * here we check to see of the tab we want to remove is the one currently selected.
+     * If that is the case, then we select the first tab
+     */
+    if (tabToBeRemoved.isSelected && this.tabs.length > 0) {
+      this.tabs[0].isSelected = true;
     }
   }
 
-  switchTab(tab: TabData): void {
-    this.electronService.switchTab(tab.id);
+  switchTab(tabIndex: number): void {
+    this.tabs.forEach((tab, index) => {
+      if (index === tabIndex) {
+        tab.isSelected = true;
+      } else {
+        tab.isSelected = false;
+      }
+    })
   }
 
   getTabs(): TabData[] {
@@ -58,5 +98,4 @@ export class PlateTabsComponent {
       this.electronService.closeDialog();
     })
   }
-
 }
