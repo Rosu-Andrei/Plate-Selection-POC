@@ -137,7 +137,7 @@ function setupIpcHandlers() {
     }*/
   });
 
-  ipcMain.on('open-dialog', () => {
+  /*ipcMain.on('open-dialog', () => {
     if (mainWindow && mainWindow.getBrowserView()) {
       mainWindow.setBrowserView(null);
     }
@@ -151,7 +151,7 @@ function setupIpcHandlers() {
         mainWindow.setBrowserView(entry.webView);
       }
     }
-  });
+  });*/
 
 }
 

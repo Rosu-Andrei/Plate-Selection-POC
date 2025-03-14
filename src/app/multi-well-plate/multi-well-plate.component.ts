@@ -5,6 +5,8 @@ import {PlateService} from '../services/plate.service';
 import {WellSelectionService} from '../services/well-selection.service';
 import {ActivatedRoute} from "@angular/router";
 import {Subscription} from "rxjs";
+import {MatDialog} from "@angular/material/dialog";
+import {SelectDialogComponent} from "../select-dialog/select-dialog.component";
 
 @Component({
   selector: 'app-multi-well-plate',
@@ -33,7 +35,8 @@ export class MultiWellPlateComponent implements OnInit {
   constructor(
     public plateService: PlateService,
     public selectionService: WellSelectionService,
-    private route: ActivatedRoute
+    private route: ActivatedRoute,
+    private dialog: MatDialog
   ) {
   }
 
@@ -233,5 +236,9 @@ export class MultiWellPlateComponent implements OnInit {
     this.selectionService.selection.selected.forEach((well) => {
       well.sampleRole = newSampleRole;
     });
+  }
+
+  openDialog() {
+    const dialogRef = this.dialog.open(SelectDialogComponent);
   }
 }

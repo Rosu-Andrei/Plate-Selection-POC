@@ -19,6 +19,9 @@
     <button class="icon-btn" (click)="toggleMenu()">
       <fa-icon [icon]="faBars"></fa-icon>
     </button>
+    <button class="icon-btn" mat-button (click)="openDialog(); $event.stopPropagation()">
+      Open Dialog
+    </button>
   </div>
 </div>
 
